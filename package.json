@@ -1,0 +1,19 @@
+{
+  "name": "nora",
+  "version": "0.0.0",
+  "description": "lora for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EasonChangOP/nora.git"
+  },
+  "author": "Eason Chang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EasonChangOP/nora/issues"
+  },
+  "homepage": "https://github.com/EasonChangOP/nora#readme"
+}
