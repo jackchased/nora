@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EasonChangOP/nora/issues"
   },
-  "homepage": "https://github.com/EasonChangOP/nora#readme"
+  "homepage": "https://github.com/EasonChangOP/nora#readme",
+  "dependencies": {
+    "busyman": "^0.3.0"
+  }
 }

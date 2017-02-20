@@ -1,0 +1,94 @@
+{
+	"MType": {
+		"JOINREQUEST": 0,
+		"JOINACCEPT": 1,
+		"UNCONFIRMDATAUP": 2,
+		"UNCONFIRMDATADOWN": 3,
+		"CONFIRMDATAUP": 4,
+		"CONFIRMDATADOWN": 5,
+		"RFU": 6,
+		"PRORITEARY": 7
+	},
+	"SpreadFactor": {
+		"SF_6": 6,
+		"SF_7": 7,
+		"SF_8": 8,
+		"SF_9": 9,
+		"SF_10": 10,
+		"SF_11": 11,
+		"SF_12": 12
+	},
+	"Bandwidth": {
+		"BW_7.8KHZ": 0,
+		"BW_10.4KHZ": 1,
+		"BW_15.6KHZ": 2,
+		"BW_20.8KHZ": 3,
+		"BW_31.25KHZ": 4,
+		"BW_41.7KHZ": 5,
+		"BW_62.5KHZ": 6,
+		"BW_125KHZ": 7,
+		"BW_250KHZ": 8,
+		"BW_500KHZ": 9
+	},
+	"CodingRate": {
+		"CR_4/5": 1,
+		"CR_4/6": 2,
+		"CR_4/7": 3,
+		"CR_4/8": 4
+	},
+	"OPMODE": {
+		"SLEEP": 0,
+		"IDLE": 1,
+		"FSTX": 2,
+		"TX": 3,
+		"FSRX": 4,
+		"RXCONTINOUS": 5,
+		"RXSINGLE": 6,
+		"CAD": 7
+	},
+	"REG": {
+		"FIFO": 0,
+		"OPMODE": 1,
+		"FRFMSB": 6,
+		"FRFMID": 7,
+		"FRFLSB": 8,
+		"PACONFIG": 8,
+		"PARAMP": 10,
+		"OCP": 11,
+		"LNA": 12,
+		"FIFOADDRPTR": 13,
+		"FIFOTXBASEADDR": 14,
+		"FIFORXBASEADDR": 15,
+		"FIFORXCURRENT": 16,
+		"IRQFLAGSMASK": 17,
+		"IRQFLAGS": 18,
+		"RXNBYTES": 19,
+		"RXHEADERCNTVALUEMSB": 20,
+		"RXHEADERCNTVALUELSB": 21,
+		"RXPACKETCNTVALUEMSB": 22,
+		"RXPACKETCNTVALUELSB": 23,
+		"MODEMSTAT": 24,
+		"PKTSNRVALUE": 25,
+		"PKTRSSIVALUE": 26,
+		"RSSIVALUE": 27,
+		"HOPCHANNEL": 28,
+		"MODEMCONFIG1": 29,
+		"MODEMCONFIG2": 30,
+		"SYMBTIMEOUTLSB": 31,
+		"PREAMBLEMSB": 32,
+		"PREAMBLELSB": 33,
+		"PAYLOADLEN": 34,
+		"MAXPAYLOADLEN": 35,
+		"HOPPERIOD": 36,
+		"FIFORXBYTEADDR": 37,
+		"MODEMCONFIG3": 38
+	},
+	"HEADERMODE": {
+		"EXPLICIT": 0,
+		"IMPLICIT": 1
+	},
+	"LONGRANGEMODE": {
+		"FSK": 0,
+		"LORA": 1
+	}
+}
