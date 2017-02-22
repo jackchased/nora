@@ -40,7 +40,15 @@ Create an instance of the `nora-hal` class.
 
 **Arguments**  
 
-1. `spiConfig` (*Object*): The following table shows the `config` properties  
+1. `config` (*Object*): The following table shows the `config` properties  
+
+|  Parameter  |  Property   |  Type     |  Mandatory  |  Description             |  Default Value  |
+|-------------|-------------|-----------|-------------|--------------------------|-----------------|   
+|  spi        |  bus        |  Number   |             |  SPI Bus                 |  0              |  
+|             |  cs         |  Number   |             |  SPI Chip Select Pin     |  0              |  
+|             |  mode       |  Number   |             |  SPI Mode                |  0              |  
+|             |  frequency  |  Number   |             |  SPI Frequency           |  2,000,000      |  
+|  gpio       |  pin        |  Number   |             |  GPIO Pin used for DIO0  |  14             | 
 
 |  Property   |  Type     |  Mandatory  |  Description          |  Default Value  |  
 |-------------|-----------|-------------|-----------------------|-----------------|   
@@ -64,11 +72,16 @@ Create an instance of the `nora-hal` class.
 
 ```javascript  
 var noraHal = require('nora-hal');
-var spiConfig = {
-        bus: 0,
-        cs: 0,
-        frequency: 200000
-        mode: 0
+var config = {
+	spi: {
+		bus: 0,
+		cs: 0,
+		frequency: 200000
+		mode: 0
+	},
+	gpio: {
+		pin: 
+	}
     };
 
 var hal = new noraHal(spiConfig);
@@ -87,6 +100,7 @@ Connect to the SoC and start to run the central. The hal will fire a `'ready'` e
 |------------------|-----------|-------------|--------------------------------------------------------------------------------------------------|-----------------|  
 |  modulation      |  Number   |             |  `0`: FSK/OOK, `1`: LoRa                                                                         |  1              |  
 |  frequency       |  Number   |             |  Range: `0 ~ 0xffffff`, Frequency interval(61.035 Hz)                                            |  0x6c8000       |  
+|  freqMode        |  Number   |             |  `0`: High Frequency Mode, `1`: Low Frequency Mode                                               |  1              |  
 |  txPower         |  Number   |             |  Range: `0 ~ 17`, Max: `20`. Unit: dBm                                                           |  14             |  
 |  spreadFactor    |  Number   |             |  Spreading Factor Rate. Range: `6 ~ 12`                                                          |  6              |  
 |  codingRate      |  Number   |             |  Error Coding Rate. Value: `1 ~ 4`                                                               |  1              |  
@@ -95,19 +109,21 @@ Connect to the SoC and start to run the central. The hal will fire a `'ready'` e
 |  payloadCrc      |  Number   |             |  `0`: Disable, `1`: Enable                                                                       |  0              |  
 |  preambleLength  |  Number   |             |  Preamble Length. Range: `1 ~ 65535`, yeild total preamble length `preambleLength + 4` symbols.  |  8              |  
 |  syncWord        |  Number   |             |  Range: `0x00 ~ 0xff`, 0x34 is reserved for LoRaWAN networks.                                    |  0x12           |  
+|  ocpOn           |  Number   |             |  Overload Current Protection. `0`: Disable, `1`: Enable                                          |  1              |  
+|  ocpTrim         |  Number   |             |  Trim of OCP current. Range: `0x00 ~ 0x1f`                                                       |  0x0b           |  
 
-|  bandwidth  |  Description  |  spreadFactor  |  Description  |  codingRate  |  Description  |  
-|-------------|---------------|----------------|---------------|--------------|---------------|  
-|  `0`        |  7.8 kHz      |  `6`           |  SF_6         |  `1`         |  CR_4/5       |  
-|  `1`        |  10.4 kHz     |  `7`           |  SF_7         |  `2`         |  CR_4/6       |  
-|  `2`        |  15.6 kHz     |  `8`           |  SF_8         |  `3`         |  CR_4/7       |  
-|  `3`        |  20.8 kHz     |  `9`           |  SF_9         |  `4`         |  CR_4/8       |  
-|  `4`        |  31.25 kHz    |  `10`          |  SF_10        |              |               |  
-|  `5`        |  41.7 kHz     |  `11`          |  SF_11        |              |               |    
-|  `6`        |  62.5 kHz     |  `12`          |  SF_12        |              |               |    
-|  `7`        |  125 kHz      |                |               |              |               |    
-|  `8`        |  250 kHz      |                |               |              |               |    
-|  `9`        |  500 kHz      |                |               |              |               |    
+|  bandwidth  |  Description  |  spreadFactor  |  Description  |  codingRate  |  Description  |  ocpTrim     |  Description                     |  
+|-------------|---------------|----------------|---------------|--------------|---------------|--------------|----------------------------------|  
+|  `0`        |  7.8 kHz      |  `6`           |  SF_6         |  `1`         |  CR_4/5       |  `0 ~ 15`    |  Imax = 45 + 5 * ocpTrim (mA)    |  
+|  `1`        |  10.4 kHz     |  `7`           |  SF_7         |  `2`         |  CR_4/6       |  `16 ~ 27`   |  Imax = -30 + 10 * ocpTrim (mA)  |  
+|  `2`        |  15.6 kHz     |  `8`           |  SF_8         |  `3`         |  CR_4/7       |  `27 ~ 32`   |  Imax = 240 (mA)                 |  
+|  `3`        |  20.8 kHz     |  `9`           |  SF_9         |  `4`         |  CR_4/8       |              |                                  |  
+|  `4`        |  31.25 kHz    |  `10`          |  SF_10        |              |               |              |                                  |  
+|  `5`        |  41.7 kHz     |  `11`          |  SF_11        |              |               |              |                                  |  
+|  `6`        |  62.5 kHz     |  `12`          |  SF_12        |              |               |              |                                  |  
+|  `7`        |  125 kHz      |                |               |              |               |              |                                  |  
+|  `8`        |  250 kHz      |                |               |              |               |              |                                  |  
+|  `9`        |  500 kHz      |                |               |              |               |              |                                  |  
 
 **Returns**  
 
@@ -158,7 +174,7 @@ hal.start(function(err) {
 *************************************************
 <a name="API_send"></a>  
 ### .send(data, [callback])  
-Tansmit Data with change ship status into tx mode. The hal will fire a `'txDone'` event when transmition finished.  
+Tansmit Data with change ship status into tx mode.  
 
 **Arguments**  
 
@@ -200,7 +216,7 @@ hal.idle(function(err) {
 
 *************************************************
 <a name="API_read"></a>  
-### .read(address, [callback])  
+### .read(address, callback)  
 Read the value of register.  
 
 **Arguments**  
@@ -226,13 +242,14 @@ hal.read(0x09, function(err, value) {
 
 *************************************************
 <a name="API_write"></a>  
-### .write(address, data)  
+### .write(address, data, [callback])  
 Write a value to register.  
 
 **Arguments**  
 
 1. `address` (*Number*): The address of register.  
 2. `data` (*Array* | *Number*): Value which will be written into register.  
+3. `callback` (*Function*): `function (err) { }`. Get called when written.  
 
 **Returns**  
 
