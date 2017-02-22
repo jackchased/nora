@@ -24,7 +24,7 @@
 * [hal.idle()](#API_idle)  
 * [hal.read()](#API_read)  
 * [hal.write()](#API_write)  
-* Events: [ready](#EVT_ready), [idle](#EVT_idle), [data](#EVT_data), [error](#EVT_error), [joinReq](#EVT_joinReq), [devIncoming](#EVT_devIncoming) and [devLeaving](#EVT_devLeaving)  
+* Events: [ready](#EVT_ready), [idle](#EVT_idle), [data](#EVT_data) and [error](#EVT_error)  
 
 *************************************************
 ## nora-hal Class  
@@ -285,30 +285,6 @@ The hal will fire a `data` event when hal is rxDone.
 
 Listener: `function() { }`  
 The hal will fire a `error` event when an error occurs.  
-
-*************************************************
-
-<a name = "EVT_joinReq"></a>
-###Event: 'joinReq'  
-
-Listener: `function() { }`  
-The hal will fire a `joinReq` event when end-divice request to join the network.  
-
-*************************************************
-
-<a name = "EVT_devIncoming"></a>
-###Event: 'devIncoming'  
-
-Listener: `function() { }`  
-The hal will fire a `devIncoming` event when end-deive has joined the network.  
-
-*************************************************
-
-<a name = "EVT_devLeaving"></a>
-###Event: 'devLeaving'  
-
-Listener: `function() { }`  
-The hal will fire a `devLeaving` event when end-deive has left the network.  
 
 *************************************************
 
