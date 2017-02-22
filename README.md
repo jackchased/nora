@@ -50,13 +50,6 @@ Create an instance of the `nora-hal` class.
 |             |  frequency  |  Number   |             |  SPI Frequency           |  2,000,000      |  
 |  gpio       |  pin        |  Number   |             |  GPIO Pin used for DIO0  |  14             | 
 
-|  Property   |  Type     |  Mandatory  |  Description          |  Default Value  |  
-|-------------|-----------|-------------|-----------------------|-----------------|   
-|  bus        |  Number   |             |  SPI Bus              |  0              |  
-|  cs         |  Number   |             |  SPI Chip Select Pin  |  0              |  
-|  mode       |  Number   |             |  SPI Mode             |  0              |  
-|  frequency  |  Number   |             |  SPI Frequency        |  2,000,000      |  
-
 |  mode  |  Description         |  
 |--------|----------------------|  
 |  `0`   |  CPOL = 0, CPHA = 0  |  
