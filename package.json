@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/EasonChangOP/nora#readme",
   "dependencies": {
-    "busyman": "^0.3.0"
+    "busyman": "^0.3.0",
+    "mraa": "^1.5.1",
+    "nedb": "^1.8.0",
+    "node-aes-cmac": "^0.1.1",
+    "q": "^1.4.1"
   }
 }
