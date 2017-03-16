@@ -15,26 +15,33 @@
 <a name="APIs"></a>
 ## 2. API & Events  
 
-####1. nora  
+#### 1. nora  
 
 * [new Nora()](#API_nora)  
 * [nora.start()](#API_start)  
 * [nora.stop()](#API_stop)  
 * [nora.reset()](#API_reset)  
 * [nora.permitJoin()](#API_permitJoin)  
-* [nora.joinAccept()](#API_joinAccept)  
+* [nora.activate()](#API_activate)  
 * [nora.macReq()](#API_macReq)  
 * [nora.find()](#API_find)  
 * [nora.list()](#API_list)  
+* [nora.info()](#API_info)  
 * [nora.remove()](#API_remove)  
-* [nora.announce()](#API_announce)  
-* Events: [ready](#EVT_ready), [ind](#EVT_ind) and [error](#EVT_error) 
+* [nora.multicast()](#API_multicast)  
+* Events: [ready](#EVT_ready), [devIncoming](#EVT_devIncoming), [ind](#EVT_ind) and [error](#EVT_error) 
 
 
-####2. nora-end-device  
+#### 2. nora-end-device  
 * [new NoraEndDeive()](#API_noraEndDevice)  
-* [noraED.write()](#API_write)  
-* [noraED.read()](#API_read)  
+* [noraED.readReq()](#API_readReq)  
+* [noraED.writeReq()](#API_writeReq)  
+* [noraED.excuteReq()](#API_excuteReq)  
+* [noraED.writeAttrsReq()](#API_writeAttrsReq)  
+* [noraED.discoverReq()](#API_discoverReq)  
+* [noraED.observeReq()](#API_observeReq)  
+.identifyReq() need to be waited.
+
 
 *************************************************
 ## nora Class  
@@ -215,13 +222,13 @@ Permit end-device to join the network. Assign join-time for end-device.
 **Example**  
 
 *************************************************
-<a name="API_joinAccept"></a>  
-### .joinAccept(devEUI, config[, callback])  
+<a name="API_activate"></a>  
+### .activate(joinWay, config[, callback])  
 To permit end-device to join the network. To assign information to end-device.  
 
 **Arguments**  
 
-1. `devEUI` (*Number* | *String*): Grobal end-device ID in IEEE EUI64 address.  
+1. `joinWay` (*String*): 'OTAA' or 'ABP'  
 2. `config` (*Object*): Join-accept information which contains appNonce, netId, devAddr, dlSettings, rxDelay, cfList(optional).   
 3. `callback` (*Function*): `function (err) { }`. Get called when written.  
 
@@ -233,7 +240,7 @@ End-device instance.
 
 *************************************************
 <a name="API_macReq"></a>  
-### .macReq(devAddr, cId, config[, callback])  
+### .macReq(devAddr, cId, config, callback)  
 To find a registered Device Address on nora.  
 
 **Arguments**  
@@ -305,6 +312,27 @@ console.log(nora.list());
 */
 ```  
 *************************************************
+<a name="API_info"></a>  
+### .info()  
+To list the nora(server) infomation.  
+
+**Arguments**  
+
+- None   
+
+**Returns**  
+
+- (*Array*)  
+
+**Example**  
+
+```javascript  
+console.log(nora.info());
+/*
+...
+*/
+```  
+*************************************************
 <a name="API_remove"></a>  
 ### .remove(devAddr[, callback])  
 To deregister and remove a end-device from nora.  
@@ -324,9 +352,9 @@ To deregister and remove a end-device from nora.
 nora.remove(0x12345678);
 ```  
 *************************************************
-<a name="API_announce"></a>  
-### .announce(msg[, callback])  
-To announce/broadcast the message to all end-devices.  
+<a name="API_multicast"></a>  
+### .multicast(msg[, callback])  
+To broadcast the message to all end-devices.  
 
 **Arguments**  
 
@@ -345,15 +373,23 @@ nora.announce('hi');
 *************************************************
 
 <a name = "EVT_ready"></a>
-###Event: 'ready'  
+### Event: 'ready'  
 
 Listener: `function() { }`  
 The nora will fire a `ready` event when nora is ready.  
 
 *************************************************
 
+<a name = "EVT_permitJoining"></a>
+### Event: 'permitJoining'  
+
+Listener: `function(joinTimeLeft) { }`  
+Fired when qserver is allowing for devices to join the network, where `joinTimeLeft` is number of seconds left to allow devices to join the network. This event will be triggered at each tick of countdown (per second).
+
+*************************************************
+
 <a name = "EVT_ind"></a>
-###Event: 'ind'  
+### Event: 'ind'  
 
 Listener: `function(msg) { }`  
 The nora will fire a `ind` event when there is a incoming indication message. There are ? types of indication including `'devIncoming'` and `'devLeaving'`  
@@ -372,10 +408,16 @@ The nora will fire a `ind` event when there is a incoming indication message. Th
   * msg.type: `'devLeaving'`  
   * msg.data: `'devAddr'`, the device address which is leaving from nora.  
 
+* **devStatus**  
+     The nora will fire a `devStatus` event when nora remove end-device.  
+
+  * msg.type: `'devStatus'`  
+  * msg.noraED: `'noraED'`  
+  * msg.data: `'online'`, `'offline'` or `'sleep'`  
 
 *************************************************
 <a name = "EVT_error"></a>
-###Event: 'error'  
+### Event: 'error'  
 
 Listener: `function() { }`  
 The nora will fire a `error` event when an error occurs.  
@@ -414,14 +456,15 @@ Create an instance of the `nora-end-device` class.
 [TODO] SmartObject Data Format.
        End-Device api should be worked on appliction layer.  
 
-<a name="API_write"></a>  
-### .write(data[, callback])  
-Write data to end-device.  
+<a name="API_readReq"></a>  
+### .readReq(path, callback)  
+Remotely read a target from the noraED. Response will be passed through the second argument of the callback.  
 
 **Arguments**  
 
-1. `data` (*Buffer*):   
-2. `callback` (*Function*): `function (err, value) { }`. Get called along with the read value.  
+1. `path` (*String*): Path of the allocated Object, Object Instance, or Resource on the remote noraED.  
+2. `callback` (*Function*): `function (err, rsp) { }`  
+
 
 
 **Returns**  
@@ -431,24 +474,18 @@ Write data to end-device.
 **Example**  
 
 ```javascript  
-var buf = new Buffer([0x01, 0x02, 0x03]);
 
-noraEd.write(buf, function (err, data) {
-  if (err)
-    console.log(err);
-  else
-    console.log(data);
-});
 ```  
 *************************************************
-<a name="API_read"></a>  
-### .read(configName[, callback])  
-Read the value of end-device configuration.  
+<a name="API_writeReq"></a>  
+### .writeReq(path, value[, callback])  
+Remotely write a value to the allocated Resource on a noraED. The response will be passed through the second argument of the callback.  
 
 **Arguments**  
 
-1. `configName` (*String*): End-Device configuration name.  
-2. `callback` (*Function*): `function (err, value) { }`. Get called along with the read value.  
+1. `path` (*String*): Path of the allocated Resource on the remote noraED.  
+2. `value` (*Depends*): The value to write to the Resource.  
+3. `callback` (*Function*): `function (err, rsp) { }`  
 
 **Returns**  
 
@@ -457,12 +494,86 @@ Read the value of end-device configuration.
 **Example**  
 
 ```javascript  
-noraEd.read('txPower', function (err, data) {
-  if (err)
-    console.log(err);
-  else
-    console.log(data);
-});
+
+```  
+*************************************************
+<a name="API_executeReq"></a>  
+### .executeReq(path[, args][, callback])  
+Invoke an executable Resource on the remote noraED. An executable Resource is like a remote procedure call.  
+
+**Arguments**  
+
+1. `path` (*String*): Path of the allocated Resource on the remote noraED.  
+2. `args` (*Depends*): The arguments to the procedure.  
+3. `callback` (*Function*): `function (err, rsp) { }`  
+
+**Returns**  
+
+- (*Promise*)  
+
+**Example**  
+
+```javascript  
+
+```  
+*************************************************
+<a name="API_writeAttrsReq"></a>  
+### .writeAttrsReq(path, attrs[, callback])  
+Configure the report settings of a Resource, an Object Instance, or an Object. This method can also be used to cancel an observation by assigning the `attrs.cancel` to `true`.  
+
+**Arguments**  
+
+1. `path` (*String*): Path of the allocated Resource on the remote noraED.  
+2. `attrs` (*Object*): The value to write to the Resource.  
+3. `callback` (*Function*): `function (err, rsp) { }`  
+
+**Returns**  
+
+- (*Promise*)  
+
+**Example**  
+
+```javascript  
+
+```  
+*************************************************
+<a name="API_discoverReq"></a>  
+### .discoverReq(path, callback)  
+Discover report settings of a Resource or, an Object Instance ,or an Object on the remote nodrED.  
+
+**Arguments**  
+
+1. `path` (*String*): Path of the allocated Resource on the remote noraED.  
+2. `callback` (*Function*): `function (err, rsp) { }`  
+
+**Returns**  
+
+- (*Promise*)  
+
+**Example**  
+
+```javascript  
+
+```  
+*************************************************
+<a name="API_observeReq"></a>  
+### .observeReq(path[, opt][, callback])  
+Start observing a Resource on the remote noraED. Please listen to event `'ind'` with type of `'devNotify'` to get the reports.  
+
+**Arguments**  
+
+1. `path` (*String*): Path of the allocated Resource on the remote noraED.  
+2. `opt` (*Number*): Set to `1` to cancel the observation. Default is `0` to enable the observation.  
+3. `callback` (*Function*): `function (err, rsp) { }`  
+
+**Returns**  
+
+- (*Promise*)  
+
+**Example**  
+
+```javascript  
+
 ```  
 *************************************************
 
