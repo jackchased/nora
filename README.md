@@ -15,7 +15,7 @@
 <a name="APIs"></a>
 ## 2. API & Events  
 
-####1. nora-hal (SX1276 Drivers)  
+#### 1. nora-hal (SX1276 Drivers)  
 
 * [new nora-hal()](#API_noraHal)  
 * [hal.start()](#API_start)  
@@ -35,12 +35,12 @@ It's according to mraa module to implement. Exposed by `require('nora-hal')`. Th
 
 *************************************************
 <a name="API_noraHal"></a>  
-### new nora-hal(spiConfig)  
+### new nora-hal(spiConfig, rxIntPin, resetPin)  
 Create an instance of the `nora-hal` class.  
 
 **Arguments**  
 
-1. `config` (*Object*): The following table shows the `config` properties  
+1. `spiConfig` (*Object*): The following table shows the `config` properties  
 
 |  Parameter  |  Property   |  Type     |  Mandatory  |  Description             |  Default Value  |
 |-------------|-------------|-----------|-------------|--------------------------|-----------------|   
@@ -48,7 +48,6 @@ Create an instance of the `nora-hal` class.
 |             |  cs         |  Number   |             |  SPI Chip Select Pin     |  0              |  
 |             |  mode       |  Number   |             |  SPI Mode                |  0              |  
 |             |  frequency  |  Number   |             |  SPI Frequency           |  2,000,000      |  
-|  gpio       |  pin        |  Number   |             |  GPIO Pin used for DIO0  |  14             | 
 
 |  mode  |  Description         |  
 |--------|----------------------|  
@@ -56,6 +55,10 @@ Create an instance of the `nora-hal` class.
 |  `1`   |  CPOL = 0, CPHA = 1  |  
 |  `2`   |  CPOL = 1, CPHA = 0  |  
 |  `3`   |  CPOL = 1, CPHA = 1  |  
+
+2. `rxIntPin` (*Number*): The 'rx' interrupte pin. Default value: 22.  
+
+3. `resetPin` (*Number*): Reset pin. Default value: 18.  
 
 **Returns**  
 
@@ -65,15 +68,12 @@ Create an instance of the `nora-hal` class.
 
 ```javascript  
 var noraHal = require('nora-hal');
-var config = {
+var spiConfig = {
 	spi: {
 		bus: 0,
 		cs: 0,
-		frequency: 200000
+		frequency: 200000,
 		mode: 0
-	},
-	gpio: {
-		pin: 
 	}
     };
 
