@@ -111,5 +111,37 @@
     "LONGRANGEMODE": {
         "FSK": 0,
         "LORA": 1
+    },
+    "RSP": {
+        "Ok": 200,
+        "Created": 201,
+        "Deleted": 202,
+        "Changed": 204,
+        "Content": 205,
+        "BadRequest": 400,
+        "NotFound": 404,
+        "MethodNotAllow": 405,
+        "Timeout": 408,
+        "InternalServerError": 500
+    },
+    "LWM2MCMDID": {
+        "BSRequest": 1,
+        "BSFinish": 2,
+        "BSWrite": 3,
+        "BSDiscover": 4,
+        "BSDelete": 5,
+        "Register": 6,
+        "Update": 7,
+        "Deregister": 8,
+        "Read": 9,
+        "Write": 10,
+        "Execute": 11,
+        "Create": 12,
+        "Delete": 13,
+        "Discover": 14,
+        "WriteAttrs": 15,
+        "Observation": 16,
+        "CancelObservation": 17,
+        "Notify": 18
     }
 }
